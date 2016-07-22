@@ -1,0 +1,1 @@
+INSERT INTO account (ID, Balans, State, FK_Users) VALUES ('3', '3456', 'Working', '1');
