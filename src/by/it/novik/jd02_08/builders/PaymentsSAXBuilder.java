@@ -1,6 +1,6 @@
 package by.it.novik.jd02_08.builders;
 
-import by.it.akhmelev.jd02_08.Demo.SAX;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -29,8 +29,7 @@ public class PaymentsSAXBuilder extends AbstractPaymentsBuilder{
             //Создание парсера SAX
             SAXParser saxParser = saxParserFactory.newSAXParser();
             //Создание объекта SAX
-            SAX sax = new SAX();
-            saxParser.parse (filename,sax);
+            saxParser.parse (filename,paymentsHandler);
         } catch (ParserConfigurationException e) {
             System.out.println("Ошибка создания парсера SAX" + e);
         } catch (SAXException e) {
@@ -40,7 +39,7 @@ public class PaymentsSAXBuilder extends AbstractPaymentsBuilder{
         }
     }
 
-    class PaymentsHandler extends DefaultHandler {
+    private class PaymentsHandler extends DefaultHandler {
         //Поле табуляции
         private String tab = "\t";
         //Поле текста между элементами документа
