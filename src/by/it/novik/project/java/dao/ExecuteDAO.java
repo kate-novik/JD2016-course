@@ -25,7 +25,7 @@ public class ExecuteDAO {
         //----------Operation with table user---------------
         //Create object User
         User user = new User(0, "Анна", "Петровна", "Соболь", "MC267895, 19.05.2013", "г. Минск, ул. Гикало 1-2", "+375297785643",
-                "anna", "sobol_anna@gmail.com", "234", 2);
+                "anna", "sobol_anna@gmail.com", "234","1233455", 2);
 
         //Show users with roles
         showTable(dao.getAllUsersWithRolesDAO().getAll(""), "users with roles");

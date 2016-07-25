@@ -4,6 +4,7 @@ package by.it.novik.project.java;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -14,9 +15,15 @@ import java.security.SecureRandom;
  */
 public class SecurityPassword {
 
-    public static String getHash (String password) {
-        //Получение хэша пароля
-        return DigestUtils.md5Hex(password);
+    /**
+     * Получение хэш-кода в 16-ричной системе для пароля с добавлением "соли"
+     * @param password Пароль
+     * @param salt "Соль"
+     * @return Захэшированный пароль
+     */
+    public static String getHash (String password, String salt) {
+        //Получение хэша пароля с солью
+        return DigestUtils.md5Hex(password.concat(salt));
     }
 
 //    private static String getSecurePassword(String passwordToHash)
@@ -26,7 +33,7 @@ public class SecurityPassword {
 //            // Create MessageDigest instance for MD5
 //            MessageDigest md = MessageDigest.getInstance("MD5");
 //            //Add password bytes to digest
-//            md.update(getSalt();
+//            md.update(getSalt());
 //            //Get the hash's bytes
 //            byte[] bytes = md.digest(passwordToHash.getBytes());
 //            //This bytes[] has bytes in decimal format;
@@ -44,17 +51,27 @@ public class SecurityPassword {
 //        }
 //        return generatedPassword;
 //    }
-//
-//    //Add salt
-//    private static byte[] getSalt() throws NoSuchAlgorithmException, NoSuchProviderException
-//    {
-//        //Always use a SecureRandom generator
-//        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "SUN");
-//        //Create array for salt
-//        byte[] salt = new byte[16];
-//        //Get a random salt
-//        sr.nextBytes(salt);
-//        //return salt
-//        return salt;
-//    }
+
+
+    /**
+     * Получение "соли" для пароля
+     * @return Массив байтов
+     */
+    public static String getSalt() {
+        String saltStr = null;
+        //Создаем массив для "соли"
+        byte[] salt = new byte[16];
+        try {
+        //Получаем объект SecureRandom generator
+        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "SUN");
+
+        //Получаем рандом "соли"
+        sr.nextBytes(salt);
+        saltStr = new String(salt,"windows-1251");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return saltStr;
+    }
 }

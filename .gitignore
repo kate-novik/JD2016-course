@@ -9,6 +9,7 @@
 out/
 out-test/
 .idea
+*.war
 *.iml
 workspace.xml
 

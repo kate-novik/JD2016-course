@@ -1,6 +1,7 @@
 package by.it.novik.project.java;
 
 import by.it.novik.project.java.beans.User;
+import by.it.novik.project.java.dao.DAO;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -8,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/do")
 public class Controller extends HttpServlet {
@@ -40,10 +42,43 @@ public class Controller extends HttpServlet {
             //Создадим куки на логин и зашифрованный пароль
             Cookie cookieFirst = new Cookie("login", login);
             Cookie cookieSecond = new Cookie("password", password);
-            cookieFirst.setMaxAge(30);
-            cookieSecond.setMaxAge(30);
+            //Установим срок хранения куки 30 дней
+            cookieFirst.setMaxAge(30*24*60*60);
+            cookieSecond.setMaxAge(30*24*60*60);
             response.addCookie(cookieFirst);
             response.addCookie(cookieSecond);
+        }
+        else {
+            String login = null;
+            String password = null;
+            Cookie[] cookies = request.getCookies();
+            for (Cookie cookie : cookies ) {
+                if (cookie.getName().equals("login")) {
+                    login = cookie.getValue();
+                }
+                if (cookie.getName().equals("password")) {
+                    password = cookie.getValue();
+                }
+            }
+            //Создаем объект DAO
+            DAO dao = DAO.getDAO();
+            //Получаем пользователя с логином и паролем из куки
+            List<User> users = dao.getUserDAO().getAll(String.format("where Login='%s' and Password='%s'", login, password));
+            User user = null;
+            if (users.size() > 0) {
+                user = users.get(0);
+            }
+            if (user != null) {
+                //Создадим сессию при ее отсутствии
+                HttpSession session = request.getSession(true);
+                //Передадим в сессию объект user
+                session.setAttribute("user", user);
+                session.setAttribute("login", user.getNickname());
+                session.setAttribute("password", user.getPassword());
+                request.setAttribute(Action.msgMessage, "Welcome, " + user.getNickname());
+                request.setAttribute("type", "success");
+                viewPage = Action.LOGIN.okPage;
+            }
         }
         //метод отправляет пользователю страницу ответа
         if (viewPage != null) {

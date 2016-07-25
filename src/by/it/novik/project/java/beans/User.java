@@ -41,6 +41,8 @@ public class User implements Serializable {
     private String nickname;
     @XmlElement(name = "Password", required = true)
     private String password;
+    @XmlElement(name = "Salt", required = true)
+    private String salt;
     @XmlElement(name = "Roll", required = true)
     private int fk_Role;
 
@@ -49,7 +51,7 @@ public class User implements Serializable {
     }
 
     public User(int idUser, String firstName, String middleName, String lastName, String passport,
-                String address, String phone, String nickname, String email, String password,
+                String address, String phone, String nickname, String email, String password, String salt,
                 int fk_Role) {
         this.idUser = idUser;
         this.firstName = firstName;
@@ -61,6 +63,7 @@ public class User implements Serializable {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
+        this.salt = salt;
         this.fk_Role = fk_Role;
     }
 
@@ -75,6 +78,7 @@ public class User implements Serializable {
         this.email = user.getEmail();
         this.nickname = user.getNickname();
         this.password = user.getPassword();
+        this.salt = user.getSalt();
         this.fk_Role = user.getFK_Role();
     }
 
@@ -158,6 +162,14 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
     public int getFK_Role() {
         return fk_Role;
     }
@@ -183,7 +195,8 @@ public class User implements Serializable {
         if (phone != null ? !phone.equals(user.phone) : user.phone != null) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
         if (nickname != null ? !nickname.equals(user.nickname) : user.nickname != null) return false;
-        return password != null ? password.equals(user.password) : user.password == null;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        return salt != null ? salt.equals(user.salt) : user.salt == null;
 
     }
 
@@ -199,6 +212,7 @@ public class User implements Serializable {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (nickname != null ? nickname.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (salt != null ? salt.hashCode() : 0);
         result = 31 * result + fk_Role;
         return result;
     }
@@ -216,6 +230,7 @@ public class User implements Serializable {
                 ", email='" + email + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", password='" + password + '\'' +
+                ", salt='" + salt + '\'' +
                 ", fk_Role=" + fk_Role +
                 '}' + '\n';
     }

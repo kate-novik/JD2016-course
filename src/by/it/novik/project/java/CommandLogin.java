@@ -9,9 +9,11 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public class CommandLogin implements ActionCommand {
-//    public static void main(String[] args) {
-//        System.out.println(SecurityPassword.getHash("456"));
-//    }
+    public static void main(String[] args) {
+    String salt = SecurityPassword.getSalt();
+    System.out.println(salt);
+        System.out.println(SecurityPassword.getHash("456",salt));
+    }
 
 
     @Override
@@ -27,14 +29,22 @@ public class CommandLogin implements ActionCommand {
             if (Validation.validDataFromForm(password, "password") && Validation.validDataFromForm(login, "login")) {
                 //Получаем объект DAO
                 DAO dao = DAO.getDAO();
-                //Захэшируем пароль для сверки с паролем в БД
-                String hashPassword = SecurityPassword.getHash(password);
-                //Получаем user по введенному логину и паролю
-                List<User> users = dao.getUserDAO().getAll(String.format("where Login='%s' and Password='%s'", login, hashPassword));
+                //Получим соль по логину
+                List<User> list = dao.getUserDAO().getAll(String.format("where Login='%s' ", login));
+                String salt;
                 User user = null;
                 //Проверка на наличие user в базе данных
-                if (users.size() > 0) {
-                    user = users.get(0);
+                if (list.size() > 0) {
+                    salt = list.get(0).getSalt();
+                    //Захэшируем пароль для сверки с паролем в БД
+                    String hashPassword = SecurityPassword.getHash(password, salt);
+                    //Получаем user по введенному логину и паролю
+                    List<User> users = dao.getUserDAO().getAll(String.format("where Login='%s' and Password='%s'", login, hashPassword));
+
+                    //Проверка на наличие user в базе данных
+                    if (users.size() > 0) {
+                        user = users.get(0);
+                    }
                 }
                 if (user == null) { //Вывод сообщение при отсутствии юзера в БД
                     request.setAttribute(Action.msgMessage, "Wrong data! Repeat, please, input or make registration.");

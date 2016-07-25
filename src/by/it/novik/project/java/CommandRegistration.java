@@ -29,11 +29,13 @@ public class CommandRegistration implements ActionCommand {
                 && Validation.validDataFromForm(phone, "phone") && Validation.validDataFromForm(passport, "passport")
                 && Validation.validDataFromForm(first_name, "first_name") && Validation.validDataFromForm(middle_name, "middle_name")
                 && Validation.validDataFromForm(last_name, "last_name")) {
+            //Получим соль для пароля
+            String salt = SecurityPassword.getSalt();
             //Захэшируем пароль для сверки с паролем в БД
-            String hashPassword = SecurityPassword.getHash(password);
+            String hashPassword = SecurityPassword.getHash(password,salt);
             //Пароль по безопасности нужно "солить" и хэшировать
             User user = new User(0, first_name, middle_name, last_name, passport, address, phone,
-                    login, email, hashPassword, 2);
+                    login, email, hashPassword,salt, 2);
             //Создаем объект DAO
             DAO dao = DAO.getDAO();
             //Проверка на создание юзера

@@ -87,6 +87,7 @@ public class UserDAO extends AbstractDAO implements IDAO<User,Integer> {
                             resultSet.getString("Login"),
                             resultSet.getString("Email"),
                             resultSet.getString("Password"),
+                            resultSet.getString("Salt"),
                             resultSet.getInt("FK_Role"));
                     userList.add(resultUser);
                 }
