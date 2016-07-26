@@ -1,33 +1,41 @@
-package by.it.novik.project.java;
+package by.it.novik.project.java.filters;
+
 
 import by.it.novik.project.java.beans.User;
 import by.it.novik.project.java.dao.DAO;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebInitParam;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/do")
-public class Controller extends HttpServlet {
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+/**
+ * Created by Kate Novik.
+ */
+@WebFilter(urlPatterns = {"/*"},
+        initParams = {
+                @WebInitParam(name = "pageLogin", value = "index.jsp", description = "For prohibition jumps without session")})
+
+public class FilterCheckSession implements Filter{
+    //Поле, содержащее название страницы для перехода
+    private String pageLogin;
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        pageLogin = filterConfig.getInitParameter("pageLogin");
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        String contextPath = request.getContextPath();
 
-    private void processRequest(HttpServletRequest request,
-                                HttpServletResponse response)
-            throws ServletException, IOException {
-        ActionFactory client = new ActionFactory(); // определение команды, пришедшей из JSP
-        ActionCommand command = client.defineCommand(request);
         //Проверка на наличие сессиии
         HttpSession httpSession = request.getSession(false);
         if (httpSession!=null) {
@@ -75,24 +83,19 @@ public class Controller extends HttpServlet {
                     session.setAttribute("password", user.getPassword());
                 }
             }
+            else {
+                response.sendRedirect(contextPath + "/" + pageLogin);
+            }
         }
-        //вызов реализованного метода execute() и передача параметров
-        //классу-обработчику конкретной команды. Обработчик должен вернуть адрес view
-        String viewPage = command.execute(request);
 
-        response.setHeader("Cache-Control", "no-store");
+            //Указываем метод для запуска остальных фильтров и сервлета
+            filterChain.doFilter(request, response);
 
 
-        //метод отправляет пользователю страницу ответа
-        if (viewPage != null) {
-            ServletContext servletContext=getServletContext();
-            RequestDispatcher dispatcher = servletContext.getRequestDispatcher(viewPage);
-            // вызов страницы ответа на запрос
-            dispatcher.forward(request, response);
-        } else {
-            // установка страницы c cообщением об ошибке
-            viewPage = Action.ERROR.inPage;
-            response.sendRedirect(request.getContextPath() + viewPage);
-        }
+    }
+
+    @Override
+    public void destroy() {
+    pageLogin = null;
     }
 }

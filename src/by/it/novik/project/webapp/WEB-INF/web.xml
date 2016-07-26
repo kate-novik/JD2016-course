@@ -32,5 +32,30 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+            <filter-name>FilterCheckSession</filter-name>
+            <filter-class>by.it.novik.project.java.filters.FilterCheckSession</filter-class>
+    <init-param>
+    <param-name>pageLogin</param-name>
+    <param-value>index.jsp</param-value>
+    </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>FilterCheckSession</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>FilterRedirectLogIn</filter-name>
+        <filter-class>by.it.novik.project.java.filters.FilterRedirectLogIn</filter-class>
+        <init-param>
+            <param-name>pageRedirect</param-name>
+            <param-value>do?command=Profile</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>FilterRedirectLogIn</filter-name>
+        <url-pattern>/index.jsp</url-pattern>
+    </filter-mapping>
 
 </web-app>

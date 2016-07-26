@@ -9,11 +9,11 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public class CommandLogin implements ActionCommand {
-    public static void main(String[] args) {
-    String salt = SecurityPassword.getSalt();
-    System.out.println(salt);
-        System.out.println(SecurityPassword.getHash("456",salt));
-    }
+//    public static void main(String[] args) {
+//    String salt = SecurityPassword.getSalt();
+//    System.out.println(salt);
+//        System.out.println(SecurityPassword.getHash("456",salt));
+//    }
 
 
     @Override
@@ -25,6 +25,7 @@ public class CommandLogin implements ActionCommand {
 
             String password = request.getParameter("Password");   //пароль
             String login = request.getParameter("Login");   //логин
+            String remember = request.getParameter("remember"); //запомнить меня
 
             if (Validation.validDataFromForm(password, "password") && Validation.validDataFromForm(login, "login")) {
                 //Получаем объект DAO
@@ -57,6 +58,7 @@ public class CommandLogin implements ActionCommand {
                     session.setAttribute("user", user);
                     session.setAttribute("login",user.getNickname());
                     session.setAttribute("password",user.getPassword());
+                    session.setAttribute("remember",remember);
                     request.setAttribute(Action.msgMessage, "Welcome, " + user.getNickname());
                     request.setAttribute("type","success");
                     page = Action.LOGIN.okPage;
