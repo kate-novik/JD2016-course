@@ -6,7 +6,7 @@
 <project name="Hello" default="10deploy" basedir="..">
     <!-- подключаем файл с настройками -->
     <property file="ant/deploy.properties"/>
-    <property file="java/resources/connection.properties"/>
+    <property file="resources/connection.properties"/>
 
     <!-- описываем classpath для копилятора -->
     <!-- каждый jar нужно описать отдельно (!),
@@ -57,6 +57,10 @@
         <copy todir="${build.dir}/WEB-INF/lib">
             <fileset dir="${local.lib.dir}"/>
         </copy>
+    <!-- копирование файлов ресурсов -->
+    <copy todir="${build.dir}/WEB-INF/classes">
+        <fileset dir="${resources.dir}"/>
+    </copy>
     </target>
 
     <!-- формирование итоговой war-сборки (архивация)

@@ -14,13 +14,24 @@ import java.util.ResourceBundle;
 public class ConnectorDB {
     //Создаем поле сингелтона
     private static volatile Connection connection;
-    private static final String URL_DB =
-            "jdbc:mysql://127.0.0.1:2016/novik"
-                    +"?useUnicode=true&characterEncoding=UTF-8";
-    private static final String USER_DB = "root";
-    private static final String PASSWORD_DB = "";
+    //Поля для получения данных для подключения к базе данных
+    private static String URL_DB;
+    private static String USER_DB;
+    private static String PASSWORD_DB;
 
     private ConnectorDB() {
+    }
+
+    public static void setUrlDb(String urlDb) {
+        URL_DB = urlDb;
+    }
+
+    public static void setUserDb(String userDb) {
+        USER_DB = userDb;
+    }
+
+    public static void setPasswordDb(String passwordDb) {
+        PASSWORD_DB = passwordDb;
     }
 
     /**
@@ -46,13 +57,6 @@ public class ConnectorDB {
             synchronized (ConnectorDB.class) {
                 if (connection == null || connection.isClosed()) {
                     //Используем файл ресурсов для создания подключения
-//                    ResourceBundle resourceBundle = ResourceBundle.getBundle("by.it.novik.project.java.resources.connection");
-//                    String coding = "?useUnicode=".concat(resourceBundle.getString("db.useUnicode")).
-//                            concat("&characterEncoding=").concat(resourceBundle.getString("db.encoding"));
-//                    String url = resourceBundle.getString("db.url").concat(coding);
-//                    String user = resourceBundle.getString("db.user");
-//                    String pass = resourceBundle.getString("db.password");
-//                    connection = DriverManager.getConnection(url, user, pass);
                     connection = DriverManager.getConnection(URL_DB,USER_DB,PASSWORD_DB);
                 }
             }

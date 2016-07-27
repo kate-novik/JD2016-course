@@ -1,18 +1,35 @@
 package by.it.novik.project.java;
 
 import by.it.novik.project.java.beans.User;
+import by.it.novik.project.java.connection.ConnectorDB;
 import by.it.novik.project.java.dao.DAO;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @WebServlet("/do")
 public class Controller extends HttpServlet {
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        //Получаем данные из файла ресурсов для соединения с базой данных
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("connection");
+        String url = resourceBundle.getString("db.url");
+        String user = resourceBundle.getString("db.user");
+        String pass = resourceBundle.getString("db.password");
+        ConnectorDB.setUrlDb(url);
+        ConnectorDB.setUserDb(user);
+        ConnectorDB.setPasswordDb(pass);
+
+    }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);

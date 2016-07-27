@@ -31,8 +31,10 @@ public class CommandGetPayments implements ActionCommand {
                    "Where FK_Account_Source = " + id_account);
             //Integer.parseInt(id_account)
             if (!listPayments.isEmpty()) {
-                request.setAttribute(Action.msgMessage, "List of payments for account #" + id_account);
-                request.setAttribute("type","success");
+                if (request.getAttribute("pay") == null) {
+                    request.setAttribute(Action.msgMessage, "List of payments for account #" + id_account);
+                    request.setAttribute("type", "success");
+                }
                 request.setAttribute("listPayments", listPayments);
                 return page;
             }

@@ -37,6 +37,11 @@ public class CommandPay implements ActionCommand {
         }
         if (Validation.validDataFromForm(amount, "amount") && Validation.validDataFromForm(destination, "account")
                 && Validation.validDataFromForm(description, "description")) {
+try {
+    ConnectorDB.getConnection().setAutoCommit(false);
+} catch (SQLException e) {
+    e.printStackTrace();
+}
             //Получаем объект DAO
             DAO dao = DAO.getDAO();
             //ID счета-получателя платежа получаем из параметра
@@ -66,36 +71,55 @@ public class CommandPay implements ActionCommand {
 
                         payment = new Payment(0, id_account, description, id_destination, Date.valueOf(currentDate),
                                 pay_amount);
+                   // dao.getAccountDAO().update(account);
+                    try {
 
-//                    try {
-//                        ConnectorDB.getConnection().setAutoCommit(false);
-                        if (dao.getAccountDAO().update(account) && dao.getPaymentDAO().create(payment) &&
-                                dao.getAccountDAO().update(destination_account)) {
+
+
+                        if (!dao.getAccountDAO().update(account)) {
+                            throw new SQLException();
+                        }
+                        if (!dao.getPaymentDAO().create(payment)) {
+                        throw new SQLException();
+                        }
+                        if (!dao.getAccountDAO().update(destination_account)) {
+                        throw new SQLException();
+                        }
                             request.setAttribute(Action.msgMessage, "Payment was done.");
-                            request.setAttribute("type","success");
-                            page = Action.PAY.okPage;
-//                            ConnectorDB.getConnection().commit();
-                        } else {
-//                            ConnectorDB.getConnection().rollback();
+                           request.setAttribute("type","success");
+                            request.setAttribute("pay","pay");
+                           page = Action.PAY.okPage;
+                           ConnectorDB.getConnection().commit();
+
+//                        if (dao.getAccountDAO().update(account) && dao.getPaymentDAO().create(payment) &&
+//                                dao.getAccountDAO().update(destination_account)) {
+//                            request.setAttribute(Action.msgMessage, "Payment was done.");
+//                            request.setAttribute("type","success");
+//                            page = Action.PAY.okPage;
+//                           ConnectorDB.getConnection().commit();
+//                        } else {
+////                            ConnectorDB.getConnection().rollback();
+//                            request.setAttribute(Action.msgMessage, "Payment wasn't done. Repeat, please, enter.");
+//                            request.setAttribute("type","danger");
+//                            page = Action.PAY.inPage;
+//                        }
+
+                    } catch (SQLException e) {
+                        try {
+                            ConnectorDB.getConnection().rollback();
                             request.setAttribute(Action.msgMessage, "Payment wasn't done. Repeat, please, enter.");
                             request.setAttribute("type","danger");
                             page = Action.PAY.inPage;
+                        } catch (SQLException e1) {
+                            e1.printStackTrace();
                         }
-
-//                    } catch (SQLException e) {
-//                        e.printStackTrace();
-//                        try {
-//                            ConnectorDB.getConnection().rollback();
-//                        } catch (SQLException e1) {
-//                            e1.printStackTrace();
-//                        }
-//                    } finally {
-//                        try {
-//                            ConnectorDB.getConnection().setAutoCommit(true);
-//                        } catch (SQLException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
+                    } finally {
+                        try {
+                            ConnectorDB.getConnection().setAutoCommit(true);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
                 } else {
                     request.setAttribute(Action.msgMessage,"Account of destination doesn't exist. Repeat, please, enter.");
