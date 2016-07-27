@@ -74,8 +74,6 @@ try {
                    // dao.getAccountDAO().update(account);
                     try {
 
-
-
                         if (!dao.getAccountDAO().update(account)) {
                             throw new SQLException();
                         }

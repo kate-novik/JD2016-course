@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="include/begin-html.jsp" %>
 <%@ include file="include/header-html.jsp" %>
 
@@ -16,6 +17,19 @@
                         <p class="form-control-static">${id_account}</p>
                     </div>
                 </div>
+                <div class="form-group">
+                      <label class="col-sm-4 control-label">Source account</label>
+                      <div class="col-sm-8">
+                      <select class="form-control" name="selectAccount" id="selectId">
+                        <option>Select source account</option>
+                        <c:forEach var="elem" items="${listAccounts}" varStatus="status">
+                        <c:if test="${elem.idAccount!=id_account}">
+                        <option value="${elem.idAccount}"><c:out value="${elem.idAccount}" /></option>
+                        </c:if>
+                        </c:forEach>
+                      </select>
+                      </div>
+                      </div>
                 <div class="form-group">
                     <label for="amount" class="col-sm-4 control-label">Amount</label>
                     <div class="col-sm-8">
