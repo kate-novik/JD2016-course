@@ -48,7 +48,6 @@ enum Action {
         {
             this.command = new CommandGetPayments();
             this.inPage="/payments.jsp";
-            //this.okPage ="/index.jsp";
         }
     },
     PAY {
