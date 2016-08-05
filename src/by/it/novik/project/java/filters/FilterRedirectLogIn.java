@@ -33,6 +33,8 @@ public class FilterRedirectLogIn implements Filter {
         if (httpSession!=null) {
             response.sendRedirect(contextPath + "/" + pageRedirect);
         }
+        //Указываем метод для запуска остальных фильтров и сервлета
+        filterChain.doFilter(request, response);
     }
 
     @Override
