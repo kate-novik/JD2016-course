@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:2016
--- Время создания: Июл 19 2016 г., 11:45
+-- Время создания: Авг 05 2016 г., 11:01
 -- Версия сервера: 10.1.10-MariaDB
 -- Версия PHP: 5.6.15
 
@@ -38,9 +38,9 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`ID`, `Balans`, `State`, `FK_Users`) VALUES
-(1, '1245', 'Working', 1),
-(2, '1557', 'Working', 1),
-(3, '3456', 'Working', 1);
+(1, '2300', 'Lock', 1),
+(2, '2767', 'Working', 1),
+(3, '3556', 'Working', 1);
 
 -- --------------------------------------------------------
 
@@ -64,7 +64,20 @@ CREATE TABLE `payment` (
 INSERT INTO `payment` (`ID`, `FK_Account_Source`, `FK_Account_Destination`, `Description`, `Amount`, `Paydate`) VALUES
 (1, 1, 2, 'Перевод средств', '50', '2016-07-13'),
 (2, 3, 1, 'Перевод средств', '100', '2016-07-01'),
-(3, 2, 1, 'Перевод средств', '10', '2016-06-06');
+(3, 2, 1, 'Перевод средств', '10', '2016-06-06'),
+(4, 1, 2, 'fghj sgghjkk', '200', '2016-07-27'),
+(5, 2, 1, 'fhkil hldfgdsd', '200', '2016-07-27'),
+(6, 2, 1, 'sdgfdgfhj dfgfhgjh', '200', '2016-07-27'),
+(7, 1, 2, 'sdzxfghj sdfghj', '200', '2016-07-27'),
+(8, 1, 2, 'sdfghjkl', '200', '2016-07-27'),
+(9, 2, 1, 'For auto else', '200', '2016-07-27'),
+(10, 2, 1, 'For auto', '400', '2016-07-27'),
+(13, 1, 2, 'For auto', '300', '2016-07-27'),
+(14, 2, 1, 'Refill account', '200', '2016-07-27'),
+(15, 2, 1, 'Refill account', '200', '2016-07-27'),
+(16, 1, 3, 'Refill account', '100', '2016-07-27'),
+(17, 2, 1, 'Refill account', '200', '2016-07-27'),
+(18, 2, 1, 'Refill account', '100', '2016-07-27');
 
 -- --------------------------------------------------------
 
@@ -101,6 +114,7 @@ CREATE TABLE `users` (
   `Phone` varchar(17) NOT NULL,
   `Login` varchar(50) NOT NULL,
   `Password` varchar(50) NOT NULL,
+  `Salt` varchar(20) NOT NULL,
   `Email` varchar(100) NOT NULL,
   `FK_Role` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -109,9 +123,9 @@ CREATE TABLE `users` (
 -- Дамп данных таблицы `users`
 --
 
-INSERT INTO `users` (`ID`, `First_Name`, `Middle_Name`, `Last_Name`, `Passport`, `Address`, `Phone`, `Login`, `Password`, `Email`, `FK_Role`) VALUES
-(1, 'Иван', 'Иванович', 'Иванов', 'MC234567, 15.08.2010', 'г. Жодино, ул. Калиновского 5-8', '+375296785643', 'ivan', '202cb962ac59075b964b07152d234b70', 'ivanov_iv@gmail.com', 2),
-(2, 'Петр', 'Петрович', 'Петров', 'MC 456789, 12.06.1999', 'г. Минск, ул. Энгельса 6-8', '+375447774323', 'petr', '250cf8b51c773f3f8dc8b4be867a9a02', 'petrov_p@gmail.com', 1);
+INSERT INTO `users` (`ID`, `First_Name`, `Middle_Name`, `Last_Name`, `Passport`, `Address`, `Phone`, `Login`, `Password`, `Salt`, `Email`, `FK_Role`) VALUES
+(1, 'Иван', 'Иванович', 'Иванов', 'MC234567, 15.08.2010', 'г. Жодино, ул. Калиновского 5-8', '+375296785643', 'ivan', '3af8212b2bee9ac54115a6fc5d455ca8', '•9uk¤ЄRщhE@К!х', 'ivanov_iv@gmail.com', 2),
+(2, 'Петр', 'Петрович', 'Петров', 'MC 456789, 12.06.1999', 'г. Минск, ул. Энгельса 6-8', '+375447774323', 'petr', '3e161c9ad01dd9b8db738fc8b228254d', '&К''vх7У™ЕV@Щ.lљ', 'petrov_p@gmail.com', 1);
 
 --
 -- Индексы сохранённых таблиц
@@ -153,7 +167,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `account`
 --
 ALTER TABLE `account`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT для таблицы `payment`
 --
@@ -168,7 +182,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
